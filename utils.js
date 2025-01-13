@@ -60,3 +60,14 @@ async function fetchHistoricalData() {
 }
 
 fetchHistoricalData();
+
+async function searchYahooFinance() {
+  try {
+    const result = await yahooFinance.search("BDIY");
+    console.log(result);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// searchYahooFinance();
