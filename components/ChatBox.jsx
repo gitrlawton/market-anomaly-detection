@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Card,
   CardContent,
@@ -13,24 +13,100 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default function ChatBox() {
-  const [messages, setMessages] = useState([]);
+  // All the messages.
+  const [messages, setMessages] = useState([
+    {
+      role: "assistant",
+      content: `Hi, how can I help you today?`,
+    },
+  ]);
+
+  // The message we're typing in the text box.
   const [input, setInput] = useState("");
 
-  const handleSend = () => {
-    if (input.trim()) {
-      setMessages([...messages, { user: "You", text: input }]);
-      // TODO: send the message to your backend and get a response
-      // Just echo the message back for now
-      setTimeout(() => {
-        setMessages((prev) => [
-          ...prev,
-          {
-            user: "AI",
-            text: `You asked: "${input}". This is where the AI response would go.`,
-          },
-        ]);
-      }, 500);
-      setInput("");
+  // Create a ref for the scroll area viewport
+  const scrollRef = useRef(null);
+
+  // Function to scroll to bottom
+  const scrollToBottom = () => {
+    if (scrollRef.current) {
+      const viewport = scrollRef.current.querySelector(
+        "[data-radix-scroll-area-viewport]"
+      );
+      if (viewport) {
+        viewport.scrollTop = viewport.scrollHeight;
+      }
+    }
+  };
+
+  // Auto-scroll when messages change
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]); // Dependency on messages ensures scroll on new message
+
+  const handleSend = async () => {
+    // Add user message to messages
+    const userMessage = { role: "user", content: input };
+    const newMessages = [...messages, userMessage];
+
+    setMessages(newMessages);
+    setInput(""); // Clear input immediately
+
+    try {
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newMessages),
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+
+      // Placeholder for AI response
+      let aiResponse = "";
+
+      while (true) {
+        const { done, value } = await reader.read();
+
+        if (done) break;
+
+        const chunk = decoder.decode(value, { stream: true });
+        aiResponse += chunk;
+
+        // Update messages with streaming AI response
+        setMessages((prevMessages) => {
+          const updatedMessages = [...prevMessages];
+          const lastMessageIndex = updatedMessages.length - 1;
+
+          // Update or add AI message
+          if (updatedMessages[lastMessageIndex].role === "assistant") {
+            updatedMessages[lastMessageIndex] = {
+              ...updatedMessages[lastMessageIndex],
+              content: aiResponse,
+            };
+          } else {
+            updatedMessages.push({
+              role: "assistant",
+              content: aiResponse,
+            });
+          }
+
+          return updatedMessages;
+        });
+      }
+    } catch (error) {
+      console.error("Error sending message:", error);
+      // Optionally, add an error message to chat
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { role: "assistant", content: `Error: ${error.message}` },
+      ]);
     }
   };
 
@@ -45,14 +121,14 @@ export default function ChatBox() {
         </p>
       </CardHeader>
       <CardContent>
-        <ScrollArea className="h-[300px] w-full pr-4">
+        <ScrollArea className="h-[300px] w-full pr-4" ref={scrollRef}>
           {messages.map((message, index) => (
             <div
               key={index}
-              className={`mb-4 ${message.user === "You" ? "text-right" : "text-left"}`}
+              className={`mb-4 ${message.role === "user" ? "text-right" : "text-left"}`}
             >
-              <p className="font-bold text-gray-300">{message.user}</p>
-              <p className="text-gray-400">{message.text}</p>
+              <p className="font-bold text-gray-300">{message.role}</p>
+              <p className="text-gray-400">{message.content}</p>
             </div>
           ))}
         </ScrollArea>
@@ -68,6 +144,8 @@ export default function ChatBox() {
           />
           <Button
             onClick={handleSend}
+            // Disable the button if there's no input
+            disabled={!input.trim()}
             className="bg-blue-600 hover:bg-blue-700 text-white"
           >
             Send

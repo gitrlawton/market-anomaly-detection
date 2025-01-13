@@ -8,11 +8,6 @@ import {
   investmentStrategy,
 } from "@/utils/mockData";
 
-export const metadata = {
-  title: "Market Dashboard",
-  description: "Real-time market analysis and investment strategies",
-};
-
 export default function DashboardPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 text-gray-100 p-4">

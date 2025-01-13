@@ -45,8 +45,8 @@ export default function MarketGraph({ data }) {
             margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
           >
             <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-            <XAxis dataKey="name" stroke="#9CA3AF" />
-            <YAxis stroke="#9CA3AF" />
+            <XAxis dataKey="name" stroke="#9CA3AF" tickMargin={10} />
+            <YAxis stroke="#9CA3AF" tickMargin={10} />
             <Tooltip
               contentStyle={{
                 backgroundColor: "#1F2937",
@@ -59,7 +59,7 @@ export default function MarketGraph({ data }) {
             <Legend
               iconType="circle"
               iconSize={20}
-              wrapperStyle={{ color: "#E5E7EB", padding: "10px" }}
+              wrapperStyle={{ color: "#E5E7EB", padding: "20px" }}
             />
             {indicators.map((indicator, index) => (
               <Line
