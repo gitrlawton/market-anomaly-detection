@@ -16,13 +16,13 @@ export default function InvestmentStrategy({ condition, strategy }) {
           <strong>Market Condition: </strong>
           <span
             className={
-              condition === "stable" ? "text-green-400" : "text-red-400"
+              condition === "Normal" ? "text-green-400" : "text-red-400"
             }
           >
-            {condition.charAt(0).toUpperCase() + condition.slice(1)}
+            {condition}
           </span>
         </p>
-        <p className="text-gray-300">{strategy}</p>
+        <p className="text-gray-300 whitespace-pre-wrap">{strategy}</p>
       </CardContent>
     </Card>
   );

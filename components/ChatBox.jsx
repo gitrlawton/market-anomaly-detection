@@ -127,7 +127,9 @@ export default function ChatBox() {
               key={index}
               className={`mb-4 ${message.role === "user" ? "text-right" : "text-left"}`}
             >
-              <p className="font-bold text-gray-300">{message.role}</p>
+              <p className="font-bold text-gray-300">
+                {message.role === "user" ? "You" : "Assistant"}
+              </p>
               <p className="text-gray-400">{message.content}</p>
             </div>
           ))}

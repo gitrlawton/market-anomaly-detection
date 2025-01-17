@@ -11,11 +11,27 @@ export const marketData = {
   VIX: 16.3,
 };
 
-export const marketCondition = "stable";
+export const marketCondition = "Normal";
 
 export const investmentStrategy = {
-  stable:
-    "In stable market conditions, consider a balanced approach. Maintain a diversified portfolio with a mix of stocks and bonds. Look for opportunities in blue-chip stocks and consider increasing exposure to growth sectors.",
-  unstable:
-    "During unstable market conditions, focus on capital preservation. Increase allocation to defensive sectors, consider adding gold or other safe-haven assets to your portfolio. Keep some cash on hand for potential buying opportunities.",
+  Normal: `
+Market stability detected. Implement a growth strategy:
+
+During stable market conditions, consider a balanced approach. Maintain a diversified portfolio with a mix of stocks and bonds. Look for opportunities in blue-chip stocks and consider increasing exposure to growth sectors. 
+
+- Deploy capital into equities
+- Maintain diversification across assets
+- Keep tactical cash reserve
+- Maintain small gold position
+    `,
+  "Crisis/Risk Alert": `
+Market instability detected. Implement a defensive strategy: 
+
+During unstable market conditions, focus on capital preservation. Increase allocation to defensive sectors, consider adding gold or other safe-haven assets to your portfolio. Keep some cash on hand for potential buying opportunities. 
+
+- Increase cash position to protect capital
+- Rotate into bonds for stability
+- Reduce equity exposure to minimize potential losses
+- Increase gold position as hedge
+    `,
 };
