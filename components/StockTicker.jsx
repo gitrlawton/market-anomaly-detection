@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { marketData } from "@/utils/mockData";
+import { fetchCurrentMarketData } from "@/utils";
 
 export default function StockTicker() {
   const [tickerItems, setTickerItems] = useState([]);
@@ -9,13 +9,29 @@ export default function StockTicker() {
   const tickerRef = useRef(null);
 
   useEffect(() => {
-    // Convert marketData to TickerItem array with mock changes
-    const items = Object.entries(marketData).map(([symbol, value]) => ({
-      symbol,
-      value,
-      change: parseFloat((Math.random() * 2 - 1).toFixed(2)),
-    }));
-    setTickerItems(items);
+    const fetchMarketData = async () => {
+      try {
+        const response = await fetch("/api/market-data");
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch market data");
+        }
+
+        const marketData = await response.json();
+
+        const items = Object.entries(marketData).map(([symbol, data]) => ({
+          symbol,
+          value: data.currentValue,
+          change: data.change,
+        }));
+
+        setTickerItems(items);
+      } catch (error) {
+        console.error("Failed to fetch market data:", error);
+      }
+    };
+
+    fetchMarketData();
 
     let animationId;
     let position = 0;

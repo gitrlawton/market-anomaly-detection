@@ -1,73 +1,85 @@
 import yahooFinance from "yahoo-finance2";
 
-async function fetchHistoricalData() {
+export async function fetchCurrentMarketData() {
   // List of symbols with equivalencies
   const symbols = [
-    // "GC=F", // XAU BGNL - Gold Futures
-    // "DX-Y.NYB", // DXY - U.S. Dollar Index
-    // "JPY=X", // JPY - Japanese Yen to USD
-    // "6B=F", // GBP - British Pound to USD
-    // "CL=F", // Cl1 - Crude Oil Futures
-    // "^VIX", // VIX - Volatility Index
-    // "^TYX", // USGG30YR - 30-Year Treasury Bond Yield
-    // "^TNX", // GT10 - U.S. 10-Year Treasury Bond Yield
-    // "^IRX", // USGG3M - U.S. 3-Month Treasury Yield
-    // "^GSPC", // MXUS - U.S. Market (S&P 500 Index as proxy)  Subtract 100 to get close value
-    // "IS0U.MU", // MXEU - Europe Market (SPDR EURO STOXX 50 ETF)   NONE
-    // "MXJP.XC", // MXJP - Japan Market (Nikkei 225 Index)  NONE
-    // "^BVSP", // MXBR - Brazil Market (Bovespa Index)
-    // "^BSESN", // MXIN - India Market (BSE Sensex)
-    // "000001.SS", // MXCN - China Market (SSE Composite Index)
+    "DX-Y.NYB", // DXY - U.S. Dollar Index
+    "JPY=X", // JPY - Japanese Yen to USD
+    "CL=F", // Cl1 - Crude Oil Futures
+    "^VIX", // VIX - Volatility Index
+    "^TNX", // GT10 - U.S. 10-Year Treasury Bond Yield
+    "^IRX", // USGG3M - U.S. 3-Month Treasury Yield
   ];
 
-  // Period of historical data
-  const startDate = "2021-04-20";
-  const endDate = "2021-04-21";
-  const interval = "1d"; // Daily data
-
-  for (const symbol of symbols) {
-    try {
-      const data = await yahooFinance.chart(symbol, {
-        period1: startDate,
-        period2: endDate,
-        interval: interval,
-      });
-      console.log(`Historical data for ${symbol}:`, data);
-      // Extract close value
-      const close = data.quotes[0]?.close;
-      console.log(`Close value for ${symbol}:`, close);
-
-      // Fetch quote data
-      const quoteData = await yahooFinance.quote(symbol);
-      console.log(`Quote data for ${symbol}:`, quoteData);
-
-      const quoteSummaryData = await yahooFinance.quoteSummary(symbol, {
-        modules: [
-          "assetProfile",
-          "summaryDetail",
-          "financialData",
-          "price",
-          "earnings",
-        ],
-      });
-      console.log(`Quote Summary for ${symbol}:`, quoteSummaryData);
-
-      console.log("-------------------");
-    } catch (error) {
-      console.error(`Failed to fetch data for ${symbol}:`, error.message);
-    }
-  }
-}
-
-fetchHistoricalData();
-
-async function searchYahooFinance() {
   try {
-    const result = await yahooFinance.search("BDIY");
-    console.log(result);
+    // Create an object to store the results
+    const marketData = {};
+
+    // Fetch quotes for each symbol
+    for (const symbol of symbols) {
+      try {
+        const quote = await yahooFinance.quote(symbol);
+
+        // Map symbol to a more readable key
+        let key;
+        switch (symbol) {
+          case "DX-Y.NYB":
+            key = "DXY";
+            break;
+          case "JPY=X":
+            key = "JPY";
+            break;
+          case "CL=F":
+            key = "Cl1";
+            break;
+          case "^VIX":
+            key = "VIX";
+            break;
+          case "^TNX":
+            key = "GT10";
+            break;
+          case "^IRX":
+            key = "USGG3M";
+            break;
+          default:
+            key = symbol;
+        }
+
+        marketData[key] = {};
+        marketData[key].change = quote.regularMarketChange;
+        // Store the regular (most recently traded price) or closing price
+        if (key == "USGG3M") {
+          marketData[key].currentValue =
+            (quote.regularMarketPrice || quote.close) + 0.11;
+        } else {
+          marketData[key].currentValue =
+            quote.regularMarketPrice || quote.close;
+        }
+      } catch (symbolError) {
+        console.error(`Error fetching data for ${symbol}:`, symbolError);
+        // Optionally, you can set a default value or skip the symbol
+        marketData[key] = null;
+      }
+    }
+
+    return marketData;
   } catch (error) {
-    console.error(error);
+    console.error("Error in fetchTodaysData:", error);
+    throw error;
   }
 }
 
-// searchYahooFinance();
+async function debugSymbolData(symbol) {
+  try {
+    // Fetch quote data
+    console.log("--- Quote Data ---");
+    const quote = await yahooFinance.quote(symbol);
+    console.log(JSON.stringify(quote, null, 2));
+  } catch (error) {
+    console.error(`Error fetching data for ${symbol}:`, error);
+  }
+}
+
+// debugSymbolData("^IRX");
+
+// fetchCurrentMarketData().then(console.log).catch(console.error);
