@@ -142,13 +142,14 @@ export default function ChatBox() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyPress={(e) => e.key === "Enter" && handleSend()}
-            className="bg-gray-700 text-gray-100 border-gray-600 focus:border-blue-500"
+            // focus-visible:ring-0 removes the focus ring, focus:border-gray-500 adds back a slight gray border
+            className="bg-gray-700 text-gray-100 border-gray-600"
           />
           <Button
             onClick={handleSend}
             // Disable the button if there's no input
             disabled={!input.trim()}
-            className="bg-blue-600 hover:bg-blue-700 text-white"
+            className="bg-gray-600 hover:bg-gray-700 text-gray-100"
           >
             Send
           </Button>
