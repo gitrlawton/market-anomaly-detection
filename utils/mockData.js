@@ -1,13 +1,9 @@
 export const marketData = {
-  MXUS: 3245.67,
   GT10: 1.52,
-  GBP: 1.38,
-  USGG30YR: 2.28,
   Cl1: 70.91,
   USGG3M: 0.05,
   DXY: 92.64,
   JPY: 110.14,
-  "XAU BGNL": 1776.5,
   VIX: 16.3,
 };
 

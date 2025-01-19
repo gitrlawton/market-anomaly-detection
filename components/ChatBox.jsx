@@ -121,7 +121,7 @@ export default function ChatBox() {
         </p>
       </CardHeader>
       <CardContent>
-        <ScrollArea className="h-[300px] w-full pr-4" ref={scrollRef}>
+        <ScrollArea className="h-[400px] w-full pr-4" ref={scrollRef}>
           {messages.map((message, index) => (
             <div
               key={index}
