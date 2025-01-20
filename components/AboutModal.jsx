@@ -10,7 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { InfoIcon } from "lucide-react";
 
 export default function AboutModal() {
@@ -26,7 +26,7 @@ export default function AboutModal() {
           <InfoIcon className="w-5 h-5" />
         </button>
       </DialogTrigger>
-      <DialogContent className="max-w-[600px] max-h-[600px] bg-gray-800 text-gray-100 p-0">
+      <DialogContent className="max-w-[600px] max-h-[600px] bg-gray-800 text-gray-200 p-0">
         <DialogHeader>
           <DialogTitle className="mb-10">{}</DialogTitle>
         </DialogHeader>
@@ -47,10 +47,10 @@ export default function AboutModal() {
               Our XGBoost classifier was trained on the following carefully
               curated set of market indicators: <br /> <br />
               <strong>DXY</strong> (U.S. Dollar Index), <strong>JPY </strong>
-              (Japanese Yen to USD), <strong>Cl1</strong> (Crude Oil Futures),{" "}
+              (Japanese Yen Spot), <strong>Cl1</strong> (Crude Oil Futures),{" "}
               <strong>VIX</strong> (Volatility Index), <strong>GT10</strong>{" "}
-              (U.S. 10-Year Treasury Bond Yield), and <strong>USGG3M</strong>{" "}
-              (U.S. 3-Month Treasury Yield)
+              (U.S. 10-Year Treasury Yield), and <strong>USGG3M</strong> (U.S.
+              3-Month Treasury Yield)
             </p>
             <h3 className="text-sm font-semibold text-gray-200 mb-2">
               Overall Performance:
@@ -109,14 +109,10 @@ export default function AboutModal() {
                 alt="Confusion Matrix for XGBoost Model"
                 width={500}
                 height={400}
-                className="max-w-full h-auto rounded-lg shadow-md"
+                className="max-w-full h-auto shadow-md"
               />
             </div>
           </div>
-          {/* <ScrollBar
-            orientation="vertical"
-            className="bg-gray-600 rounded-full w-2 hover:bg-gray-500 transition-colors duration-200"
-          /> */}
         </ScrollArea>
       </DialogContent>
     </Dialog>

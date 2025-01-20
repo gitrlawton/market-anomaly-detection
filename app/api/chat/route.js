@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
-import { marketCondition, investmentStrategy } from "@/utils/mockData";
+import { marketCondition, growthInvestmentStrategies } from "@/utils/mockData";
 
 const systemPrompt = `
 You are an AI financial assistant specialized in explaining investment strategies to end users. 
@@ -9,7 +9,7 @@ Your primary goal is to clarify and expand on the following investment strategy.
 Current Market Condition: ${marketCondition} 
 
 Investment Strategy for ${marketCondition} Market:
-${investmentStrategy[marketCondition]} 
+${growthInvestmentStrategies["Balanced"]} 
 
 Users may have questions about the strategy or need further details. 
 

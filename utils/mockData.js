@@ -9,18 +9,35 @@ export const marketData = {
 
 export const marketCondition = "Normal";
 
-export const investmentStrategy = {
-  Normal: `
-Market stability detected. Implement a growth strategy:
+export const growthInvestmentStrategies = {
+  Conservative: `
+Focus on preserving capital while capturing modest growth through high-quality investments. Prioritize established dividend-paying stocks and investment-grade bonds.
 
-During stable market conditions, consider a balanced approach. Maintain a diversified portfolio with a mix of stocks and bonds. Look for opportunities in blue-chip stocks and consider increasing exposure to growth sectors. 
+- Keep significant safety buffer in cash (25%) 
+- Focus on high-grade government and corporate bonds (30%) 
+- Invest in stable, dividend-paying stocks (40%) 
+- Maintain minimal gold hedge (5%) 
+  `,
+  Balanced: `
+Balance growth potential with reasonable risk management through diversified investments across major asset classes.
 
-- Deploy capital into equities
-- Maintain diversification across assets
-- Keep tactical cash reserve
-- Maintain small gold position
+- Keep working cash reserve (15%) 
+- Hold strategic bond positions for stability (20%) 
+- Deploy significant capital into quality stocks (60%) 
+- Maintain minimal gold hedge (5%) 
     `,
-  "Crisis/Risk Alert": `
+  Aggressive: `
+Maximize growth potential through heavy equity exposure, accepting higher volatility for potentially greater returns.
+
+- Maintain minimal cash reserves (5%) 
+- Keep limited bond exposure for basic stability (10%) 
+- Maximize stock market exposure (80%) 
+- Add growth-focused commodity exposure (5%)
+`,
+};
+
+export const defensiveInvestmentStrategies = {
+  Balanced: `
 Market instability detected. Implement a defensive strategy: 
 
 During unstable market conditions, focus on capital preservation. Increase allocation to defensive sectors, consider adding gold or other safe-haven assets to your portfolio. Keep some cash on hand for potential buying opportunities. 

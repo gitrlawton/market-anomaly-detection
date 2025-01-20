@@ -113,11 +113,11 @@ export default function ChatBox() {
   return (
     <Card className="w-full h-full bg-gray-800 border-gray-700">
       <CardHeader>
-        <CardTitle className="text-2xl font-semibold text-gray-100">
+        <CardTitle className="text-2xl font-semibold text-gray-200">
           Chatbot
         </CardTitle>
         <p className="text-sm text-gray-400">
-          Ask questions about the investment strategy
+          Ask questions about the investment strategy.
         </p>
       </CardHeader>
       <CardContent>
@@ -125,12 +125,22 @@ export default function ChatBox() {
           {messages.map((message, index) => (
             <div
               key={index}
-              className={`mb-4 ${message.role === "user" ? "text-right" : "text-left"}`}
+              className={`mb-4 flex flex-col ${message.role === "user" ? "items-end" : "items-start"}`}
             >
-              <p className="font-bold text-gray-300">
+              <p className="font-bold text-gray-300 ml-2 mr-2 mb-2">
                 {message.role === "user" ? "You" : "Assistant"}
               </p>
-              <p className="text-gray-400">{message.content}</p>
+              <div
+                className={`p-3 rounded-3xl max-w-[80%] w-fit ${
+                  message.role === "user"
+                    ? "bg-blue-600 text-gray-200"
+                    : "bg-gray-700 text-gray-200"
+                }`}
+              >
+                <p className="ml-2 mr-2 whitespace-pre-wrap">
+                  {message.content}
+                </p>
+              </div>
             </div>
           ))}
         </ScrollArea>
@@ -143,13 +153,13 @@ export default function ChatBox() {
             onChange={(e) => setInput(e.target.value)}
             onKeyPress={(e) => e.key === "Enter" && handleSend()}
             // focus-visible:ring-0 removes the focus ring, focus:border-gray-500 adds back a slight gray border
-            className="bg-gray-700 text-gray-100 border-gray-600"
+            className="bg-gray-700 text-gray-200 border-gray-600"
           />
           <Button
             onClick={handleSend}
             // Disable the button if there's no input
             disabled={!input.trim()}
-            className="bg-gray-600 hover:bg-gray-700 text-gray-100"
+            className="bg-gray-600 hover:bg-gray-700 text-gray-200"
           >
             Send
           </Button>

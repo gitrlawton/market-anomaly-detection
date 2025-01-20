@@ -6,12 +6,13 @@ import AboutModal from "@/components/AboutModal";
 import {
   marketData,
   marketCondition,
-  investmentStrategy,
+  growthInvestmentStrategies,
+  defensiveInvestmentStrategies,
 } from "@/utils/mockData";
 
 export default function DashboardPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 text-gray-100">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 text-gray-200">
       <StockTicker />
       <div className="container mx-auto p-4">
         <div className="flex items-center justify-center mb-6">
@@ -26,7 +27,7 @@ export default function DashboardPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <InvestmentStrategy
               condition={marketCondition}
-              strategy={investmentStrategy[marketCondition]}
+              strategy={growthInvestmentStrategies}
             />
             <ChatBox />
           </div>
