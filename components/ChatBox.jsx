@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-export default function ChatBox() {
+export default function ChatBox({ marketCondition, approach }) {
   // All the messages.
   const [messages, setMessages] = useState([
     {
@@ -58,7 +58,11 @@ export default function ChatBox() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(newMessages),
+        body: JSON.stringify({
+          newMessages,
+          marketCondition,
+          approach,
+        }),
       });
 
       if (!response.ok) {

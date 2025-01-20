@@ -10,9 +10,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-export default function InvestmentStrategy({ condition, strategy }) {
-  const [approach, setApproach] = useState("Balanced");
-
+export default function InvestmentStrategy({
+  condition,
+  strategy,
+  approach,
+  setApproach,
+}) {
   return (
     <Card className="h-full bg-gray-800 border-gray-700">
       <CardHeader>
@@ -29,7 +32,7 @@ export default function InvestmentStrategy({ condition, strategy }) {
           <strong>Current Market: </strong>
           <span
             className={
-              condition === "Normal" ? "text-green-400" : "text-red-400"
+              condition === "normal" ? "text-green-400" : "text-red-400"
             }
           >
             {condition.charAt(0).toUpperCase() + condition.slice(1)}
@@ -52,19 +55,19 @@ export default function InvestmentStrategy({ condition, strategy }) {
             </SelectTrigger>
             <SelectContent className="bg-gray-700 text-gray-200 border-gray-600 shadow-lg">
               <SelectItem
-                value="Conservative"
+                value="conservative"
                 className="hover:bg-gray-600 focus:bg-gray-600 focus:text-gray-200"
               >
                 Conservative
               </SelectItem>
               <SelectItem
-                value="Balanced"
+                value="balanced"
                 className="hover:bg-gray-600 focus:bg-gray-600 focus:text-gray-200"
               >
                 Balanced
               </SelectItem>
               <SelectItem
-                value="Aggressive"
+                value="aggressive"
                 className="hover:bg-gray-600 focus:bg-gray-600 focus:text-gray-200"
               >
                 Aggressive
@@ -73,7 +76,16 @@ export default function InvestmentStrategy({ condition, strategy }) {
           </Select>
         </div>
         <p className="text-gray-300 whitespace-pre-wrap">
+          {condition == "Normal"
+            ? "Market stability detected. Implement a growth strategy."
+            : "Market instability detected. Implement a defensive strategy."}
+        </p>
+        <p className="text-gray-300 whitespace-pre-wrap">
           {strategy[approach]}
+        </p>
+        <p className="text-sm italic text-gray-300 whitespace-pre-wrap">
+          Percentages represent how much of your total investment money
+          (portfolio) should be allocated to each asset.*
         </p>
       </CardContent>
       <style jsx global>{`

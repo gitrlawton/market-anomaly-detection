@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { fetchCurrentMarketData } from "@/utils";
 
 export default function StockTicker() {
   const [tickerItems, setTickerItems] = useState([]);

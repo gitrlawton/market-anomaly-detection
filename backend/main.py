@@ -1,39 +1,68 @@
 import pickle
+import requests
+import pandas as pd
+from flask import Flask, jsonify
+from flask_cors import CORS
 
 def load_model(filename):
     with open(filename, "rb") as file:
         return pickle.load(file)
 
-# TODO: Prepare the input data for the models.
-# Takes in the attributes and returns a dataframe and a dictionary to make
-# prediction with our model.
-def prepare_input():
-
-    input_dict = {
+def make_prediction():
     
-    }
+    model = load_model("backend/xgb_model.pkl")
 
-    input_df = pd.DataFrame([input_dict])
+    try:
+        # Make the GET request
+        response = requests.get("http://localhost:3000/api/market-data")
+        response.raise_for_status()  # Raise an error for HTTP codes 4xx/5xx
 
-    return input_df, input_dict
+        # Parse and use the response data
+        data = response.json()
+        print("Market Data:", data)
 
-# TODO: Define a function to make predictions using the ML models we trained.
-# Takes in the input dataframe and input dictionary from prepare_input().
-def make_predictions(input_df, input_dict):
-    
-    # Dictionary representing the prediction of the model.  
-    # predict_proba() returns an array of predicted probabilities for each
-    # class.  This scenario has two classes, 0 and 1, also called the negative
-    # class and the positive class, where negative is "unstable" and positive is
-    # "stable".
-    # We only care about the positive value (the second value, corresponding to
-    # predicting who will churn), so we store the value at index 1, and not the 
-    # one at index 0.
-    # We're using the models we trained, so it knows what the target value is
-    # (whether the market is unstable or not), and that is binary (either 0 or 1.)
-    prediction = xgboost_model.predict_proba(input_df)[0][1]
-    
-    
-    return prediction
+        # Specify the exact order of columns
+        column_order = ['GT10', 'Cl1', 'USGG3M', 'DXY', 'JPY', 'VIX']
 
-model = load_model("xgb_model_with_SMOTE.pkl")
+        # Create a DataFrame with the specified order
+        # "feature" is a variable name for the column, and "data[feature]['currentValue']" is the value
+        # iterating over each feature in column_order
+        current_datapoint = pd.DataFrame({
+            feature: [data[feature]['currentValue']] for feature in column_order
+        })
+
+        # Make predictions
+        prob_predictions = model.predict_proba(current_datapoint)
+
+        # Get the probability for class 1 (market crash)
+        class_1_probs = prob_predictions[:, 1]
+
+        threshold = 0.43
+
+        # Make predictions using the threshold
+        predictions = (class_1_probs >= threshold).astype(int)
+        prediction = predictions[0]
+
+        print(f"Prediction: {prediction}")
+    except requests.exceptions.RequestException as e:
+        print("An error occurred:", e)
+        
+        
+    return prediction or None
+
+
+app = Flask(__name__)
+CORS(app)
+
+@app.route("/api/predict", methods=["GET"])
+def get_prediction():
+    try:
+        prediction = int(make_prediction())  
+        print(f"Prediction: {prediction}")
+        return jsonify({"prediction": prediction})
+    except Exception as e:
+        print(f"Error in prediction: {e}")
+        return jsonify({"error": str(e)}), 500
+
+if __name__ == "__main__":
+    app.run(debug=True)

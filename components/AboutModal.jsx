@@ -73,7 +73,8 @@ export default function AboutModal() {
             <ul className="list-disc list-inside text-sm text-gray-300 mb-4">
               <li className="py-1">
                 Precision (78%): When the model flags an anomaly, it is correct
-                78% of the time.
+                78% of the time, or, in other words, there's a 78% chance it is
+                truly an anomalous state.
               </li>
               <li className="mb-1">
                 Recall (72%): The model successfully detects 72% of all
@@ -100,7 +101,7 @@ export default function AboutModal() {
             <p className="text-sm text-gray-300 mb-4">
               The model shows excellent generalization, with perfect performance
               on training data (1.0 accuracy) and a well-maintained performance
-              of 93% test accuracy, ensuring it avoids overfitting.
+              of 93% test accuracy.
             </p>
 
             <div className="flex justify-center items-center mt-10">
