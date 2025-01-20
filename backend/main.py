@@ -1,39 +1,51 @@
-import pickle
+import joblib
+import pandas as pd
+from sklearn.metrics import classification_report, accuracy_score
+import xgboost as xgb
+import streamlit as st
 
-def load_model(filename):
-    with open(filename, "rb") as file:
-        return pickle.load(file)
+# Load the model from the xgb_model directory
+def load_model():
+    model = joblib.load('xgb_model.pkl')  # Adjust the filename if necessary
+    return model
 
-# TODO: Prepare the input data for the models.
-# Takes in the attributes and returns a dataframe and a dictionary to make
-# prediction with our model.
-def prepare_input():
+#Added this model eval funct
 
-    input_dict = {
+# Model Evaluation Function
+def evaluate_model(model, X_test, y_test):
+    """
+    This function evaluates the model's performance on the given test set.
+
+    :param model: The trained model.
+    :param X_test: Test data features.
+    :param y_test: True labels for the test data.
+    :return: Prints the evaluation metrics.
+    """
+    # Make predictions on the test set
+    y_pred = model.predict(X_test)
+
+    # Calculate accuracy and print the classification report
+    accuracy = accuracy_score(y_test, y_pred)
+    st.write(f"Accuracy: {accuracy:.2f}")
+
+    # Print classification report
+    st.write("Classification Report:")
+    st.text(classification_report(y_test, y_pred))
+
+# Example usage within the app
+def main():
+    model = load_model()
+
+    # Simulate loading test data (X_test, y_test)
+    # Replace this with actual test data loading from your dataset
+    # Example: X_test, y_test = prepare_input()
     
-    }
+    # Dummy test data (replace with your actual test data)
+    X_test = pd.DataFrame([[0.5, 1.2, -0.3], [1.0, -0.4, 0.5]], columns=['feature1', 'feature2', 'feature3'])
+    y_test = pd.Series([0, 1])
 
-    input_df = pd.DataFrame([input_dict])
+    # Call the evaluate_model function
+    evaluate_model(model, X_test, y_test)
 
-    return input_df, input_dict
-
-# TODO: Define a function to make predictions using the ML models we trained.
-# Takes in the input dataframe and input dictionary from prepare_input().
-def make_predictions(input_df, input_dict):
-    
-    # Dictionary representing the prediction of the model.  
-    # predict_proba() returns an array of predicted probabilities for each
-    # class.  This scenario has two classes, 0 and 1, also called the negative
-    # class and the positive class, where negative is "unstable" and positive is
-    # "stable".
-    # We only care about the positive value (the second value, corresponding to
-    # predicting who will churn), so we store the value at index 1, and not the 
-    # one at index 0.
-    # We're using the models we trained, so it knows what the target value is
-    # (whether the market is unstable or not), and that is binary (either 0 or 1.)
-    prediction = xgboost_model.predict_proba(input_df)[0][1]
-    
-    
-    return prediction
-
-model = load_model("xgb_model_with_SMOTE.pkl")
+if __name__ == "__main__":
+    main()
